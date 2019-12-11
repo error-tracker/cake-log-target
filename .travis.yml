@@ -10,7 +10,6 @@ php:
 
 cache:
     directories:
-        - vendor
         - $HOME/.composer/cache
 
 matrix:
