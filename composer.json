@@ -1,0 +1,40 @@
+{
+    "name": "error-tracker/cake-log-target",
+    "description": "Error logging to Error Tracker",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Ade Attwood",
+            "email": "ade@practically.io",
+            "role": "Developer",
+            "homepage": "https://practically.io"
+        }
+    ],
+    "require": {
+        "cakephp/cakephp": "^3.5",
+        "error-tracker/php-sdk": "^0.1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7",
+        "squizlabs/php_codesniffer": "^3.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "ErrorTracker\\Cake\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ErrorTracker\\Cake\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "lint": "phpcs --standard=psr2 src tests",
+        "beautify": "phpcbf --standard=psr2 src test",
+        "pre-commit": [
+            "@test",
+            "phpcs --standard=psr2 --warning-severity=10 src tests"
+        ]
+    }
+}
