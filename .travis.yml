@@ -25,4 +25,4 @@ before_script:
     - composer --version
 
 script:
-    - phpunit
+    - ./vendor/bin/phpunit
