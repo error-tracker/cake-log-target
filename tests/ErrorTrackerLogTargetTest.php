@@ -55,11 +55,12 @@ class ErrorTrackerLogTargetTest extends BaseTestCase
                 [
                     'app_key' => 'CAKE_APP_KEY',
                     'description' => 'This is an error',
-                    'text' => "Array\n(\n    [scope] => Array\n        (\n        )\n\n)\n",
+                    'text' => print_r([0 => 'This is an error', 1 => ['scope' => []]], true), //"Array\n(\n    [scope] => Array\n        (\n        )\n\n)\n",
                     'type' => 1,
                     'user_agent' => '',
                     'ip' => '',
-                    'url' => 'my/test/request',
+                    'url' => 'http://unknown/my/test/request',
+                    'name' => null,
                 ]
             );
 
@@ -72,39 +73,6 @@ class ErrorTrackerLogTargetTest extends BaseTestCase
 
 
         Log::write('error', 'This is an error');
-    }
-
-    public function testReportArray(): void
-    {
-        $http = $this->mockHttp()->getMock();
-        $http->expects($this->once())
-            ->method('post')
-            ->willReturn(null)
-            ->with(
-                '/report',
-                [
-                    'app_key' => 'CAKE_APP_KEY',
-                    'description' => "Array\n(\n    [one] => one\n    [two] => two\n)\n",
-                    'text' => "Array\n(\n    [scope] => Array\n        (\n        )\n\n)\n",
-                    'type' => 1,
-                    'user_agent' => '',
-                    'ip' => '',
-                    'url' => 'my/test/request',
-                ]
-            );
-
-        Log::setConfig('error_tracker', [
-            'className' => 'ErrorTracker\Cake\LogTarget',
-            'levels' => ['warning', 'error', 'critical', 'alert', 'emergency'],
-            'app_key' => 'CAKE_APP_KEY',
-            'client' => new Client('CAKE_APP_KEY', $http),
-        ]);
-
-
-        Log::write('error', [
-            'one' => 'one',
-            'two' => 'two',
-        ]);
     }
 
     public function testReportException(): void
@@ -122,7 +90,7 @@ class ErrorTrackerLogTargetTest extends BaseTestCase
                     'type' => 1,
                     'user_agent' => '',
                     'ip' => '',
-                    'url' => 'my/test/request',
+                    'url' => 'http://unknown/my/test/request',
                 ];
 
                 foreach ($args as $key => $value) {

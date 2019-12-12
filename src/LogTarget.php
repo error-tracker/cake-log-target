@@ -76,6 +76,22 @@ class LogTarget extends \Cake\Log\Engine\BaseLog
     }
 
     /**
+     * Gets the full url for the request
+     *
+     * @return string
+     */
+    public function getUrl(): string
+    {
+        $url = ($_SERVER['REQUEST_SCHEME'] ?? 'http') . '://' . ($_SERVER['SERVER_NAME'] ?? 'unknown');
+
+        if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') {
+            $url .= ':' . $_SERVER['SERVER_PORT'];
+        }
+
+        return $url . ($_SERVER['REQUEST_URI'] ?? '/unknown');
+    }
+
+    /**
      * Sends the log report to the Error Tracker app
      *
      * @param mixed  $level
@@ -86,11 +102,15 @@ class LogTarget extends \Cake\Log\Engine\BaseLog
      */
     public function log($level, $message, array $context = []): void
     {
+        $error = strtok($this->_format($message), "\n");
+        preg_match('/^\[?(.*?)[\]:]/', $error, $matches);
+
         $this->getClient()->report([
             'type' => $level === 'warning' ? 2 : 1,
-            'description' => $this->_format($message),
-            'text' => $this->_format($context),
-            'url' => isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '',
+            'name' => isset($matches[1]) ? $matches[1] : null,
+            'description' => $error,
+            'text' => $this->_format([$message, $context]),
+            'url' => $this->getUrl(),
              'user_agent' => isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '',
             'ip' => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '',
         ]);

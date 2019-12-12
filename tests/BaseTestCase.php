@@ -23,7 +23,7 @@ class BaseTestCase extends \PHPUnit\Framework\TestCase
     public function mockHttp(): MockBuilder
     {
         Http::$trackerUrl = 'http:localhost';
-        $_SERVER['REQUEST_URI'] = 'my/test/request';
+        $_SERVER['REQUEST_URI'] = '/my/test/request';
 
         return $this->getMockBuilder('Http')->setMethods(['post']);
     }
