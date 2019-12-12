@@ -2,6 +2,7 @@
     "name": "error-tracker/cake-log-target",
     "description": "Error logging to Error Tracker",
     "type": "library",
+    "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "Ade Attwood",
